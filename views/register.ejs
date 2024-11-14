@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="./build.css" rel="stylesheet" />
+  </head>
+  <body
+    class="bg-[#1E1E2E] flex-1 justify-center items-center"
+    style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+  >
+    <div class="bg-[#1e1e2e] p-4 mx-auto mt-24 max-w-sm">
+      <img
+        src="./images/register.png"
+        alt=""
+        srcset=""
+        class="w-28 h-28 mx-auto"
+      />
+      <h1 class="mb-6 mt-4 font-bold text-4xl text-center text-[#7B83EB]">
+        Create Account
+      </h1>
+      <form action="/register" method="post" class="w-full bg-[#1e1e2e]">
+        <p class="font-bold">
+          Username<span class="text-red-500 ml-1">*</span>
+        </p>
+        <input
+          type="text"
+          name="username"
+          value="<%= username %>"
+          class="p-2 rounded-lg w-full border-2 border-[#7B83EB] bg-[#1e1e2e] outline-none"
+        />
+        <% if(errors?.username) { %>
+        <p class="font-bold text-red-500 text-xs"><%= errors?.username[0] %></p>
+        <% } %>
+
+        <p class="mt-2 font-bold">
+          Password<span class="text-red-500 font-bold ml-1">*</span>
+        </p>
+        <input
+          name="password"
+          type="password"
+          value="<%= password %>"
+          class="p-2 rounded-lg w-full mt-1 border-2 border-[#7B83EB] bg-[#1e1e2e] outline-none"
+        />
+        <% if(errors?.password) { %>
+        <p class="font-bold text-red-500 text-xs"><%= errors?.password[0] %></p>
+        <% } %>
+
+        <div class="text-center mt-2">
+          <a href="/login" class="text-[#7B83EB] font-bold text-center mt-4"
+            >Login</a
+          >
+        </div>
+
+        <input
+          type="submit"
+          value="Submit"
+          class="p-4 rounded-lg text-black w-full font-bold mt-4 bg-[#767ef0] cursor-pointer mb-8"
+        />
+      </form>
+    </div>
+  </body>
+</html>

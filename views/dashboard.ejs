@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link href="./build.css" rel="stylesheet" />
+  </head>
+  <body
+    class="bg-[#1E1E2E] flex justify-center items-center min-h-screen"
+    style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+  >
+  <input id="username" type="hidden" value="<%= username %>">
+    <!-- Main Container to take full screen height -->
+    <div
+      class="w-full max-w-4xl mx-auto p-6 bg-[#1E1E2E] border border-[#585B70] rounded-lg shadow-lg flex gap-6 min-h-screen"
+    >
+      <!-- Online Users Section -->
+      <div class="bg-[#2A2A3B] p-4 rounded-lg flex flex-col w-1/4 h-full">
+        <h3 class="text-[#CDD6F4] font-semibold mb-2">Online Users</h3>
+        <ul
+          id="userList"
+          class="text-[#F5E0DC] flex flex-col space-y-2 overflow-y-auto"
+        >
+          <!-- User list will be populated here -->
+        </ul>
+      </div>
+
+      <!-- Chat Messages Section -->
+       <!-- Message container -->
+    <div class="messagesContainer flex flex-col gap-4 flex-1 overflow-y-auto">
+      <!-- Messages will be appended here -->
+    </div>
+      <!-- <div class="flex-1 flex flex-col gap-4 h-full">
+        Message from System
+        <div
+          class="receive p-4 bg-[#CBA6F7] text-[#1E1E2E] rounded-lg max-w-[70%] self-start shadow"
+        >
+          Hello! How can I help you today?
+        </div>
+
+        <!-- Message from User -->
+        <!-- <div
+          class="send p-4 bg-[#F5E0DC] text-[#1E1E2E] rounded-lg max-w-[70%] self-end shadow"
+        >
+          Hi! I have a question about the theme setup.
+        </div> -->
+
+        <!-- Message Input Area -->
+        <div class="flex items-center gap-2 mt-4 absolute left-[40%] right bottom-2">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message..."
+            class="w-full px-4 py-2 bg-[#1E1E2E] border border-[#585B70] rounded-lg text-[#CDD6F4] placeholder:text-gray-500 focus:outline-none"
+          />
+          <button
+            id="sendButton"
+            class="px-4 py-2 bg-[#CBA6F7] text-[#1E1E2E] font-semibold rounded-lg hover:bg-[#B47DE1] transition"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+
+    <script>
+      const username = document.getElementById("username").value
+       const socket = io("http://localhost:4000", {
+      query: { username }, // Pass the username on connection
+        }); // Connect to server
+      const messageInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+      const messagesContainer = document.querySelector(".messagesContainer");
+
+      // Function to append messages to the chat
+      function appendMessage(message, type) {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("p-4", "rounded-lg", "max-w-[70%]", "shadow");
+
+        // Apply styles based on message type (sent or received)
+        if (type === "sent") {
+          messageDiv.classList.add("self-end", "bg-[#CBA6F7]", "text-[#1E1E2E]");
+        } else {
+          messageDiv.classList.add("self-start", "bg-[#F5E0DC]", "text-[#1E1E2E]");
+        }
+        messageDiv.textContent = message;
+
+        // Append the message to the container
+        messagesContainer.appendChild(messageDiv);
+      }
+
+      // Send message when button is clicked
+      sendButton.addEventListener("click", () => {
+        const message = messageInput.value;
+        let selectedUser = localStorage.getItem("selectedUser");
+        
+        // Send private messages
+
+      if (message && selectedUser) {
+        console.log(selectedUser)
+
+        // Send message to specific recipient
+        socket.emit("private message", {
+          recipientId: selectedUser,
+          message,
+          
+        });
+
+        // Display sent message locally
+        appendMessage(message, "sent");
+        messageInput.value = "";
+      }
+      else {
+          // Emit message to the server
+          socket.emit("chat message", message);
+
+          // Append the message to the UI as a sent message
+          appendMessage(message, "sent");
+
+          // Clear the input field
+          messageInput.value = "";
+        }
+      });
+
+      // Handle incoming messages from the server
+      socket.on("private message", (message) => {
+        appendMessage(message, "received");
+      });
+
+      // Handle incoming messages from the server
+      socket.on("chat message", (message) => {
+        appendMessage(message, "received");
+      });
+
+      // Update user list in real-time
+      socket.on("updateUserList", (users) => {
+        const userList = document.getElementById("userList");
+        userList.innerHTML = ""; // Clear the list
+        users.forEach((user, index) => {
+          const userItem = document.createElement("li");
+          userItem.textContent = `${user}`;
+           userItem.className =
+            "cursor-pointer text-[#CDD6F4] hover:bg-[#44475A] p-2 rounded";
+          // Add click handler
+          userItem.onclick = () => {
+            // Save selected user to local storage
+            // selectedUser = name;
+            localStorage.setItem("selectedUser", user);
+
+            // Clear previous selection
+            document
+              .querySelectorAll("#userList li")
+              .forEach((el) => el.classList.remove("bg-[#6272A4]"));
+
+            // Apply selected styling to the clicked user
+            userItem.classList.add("bg-[#6272A4]");
+        };
+          userList.appendChild(userItem);
+
+    })
+      });
+    </script>
+  </body>
+</html>
