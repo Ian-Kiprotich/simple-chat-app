@@ -2,7 +2,7 @@
 
 This is a WebSocket-based chat application for the websockets API series that allows users to join a chat room and send private messages to each other. Built with `Socket.IO`, this app supports real-time messaging and user presence tracking.
 
-## Features
+## Features.
 
 - **Real-time Messaging**: Users can send and receive messages instantly.
 - **Private Messaging**: Users can send messages directly to specific online users.
