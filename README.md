@@ -1,4 +1,4 @@
-# Simple WebSocket Chat App with Private Messaging
+# Simple WebSocket Chat App with Private Messaging.
 
 This is a WebSocket-based chat application for the websockets API series that allows users to join a chat room and send private messages to each other. Built with `Socket.IO`, this app supports real-time messaging and user presence tracking.
 
