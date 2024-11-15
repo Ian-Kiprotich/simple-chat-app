@@ -8,9 +8,9 @@ This is a WebSocket-based chat application for the websockets API series that al
 - **Private Messaging**: Users can send messages directly to specific online users.
 - **User Presence Tracking**: Displays the list of currently connected users and updates in real-time as users join or leave.
 
-## Getting Started
+## Getting Started.
 
-### Prerequisites
+### Prerequisites.
 
 - **Node.js** (v14 or later)
 - **npm** (Node Package Manager)
